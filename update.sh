@@ -52,16 +52,28 @@ if ! curl -s -f -I "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/down
   exit 1
 fi
 
+# Check if Linux binaries exist
+if ! curl -s -f -I "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-x86_64-unknown-linux-gnu.tar.gz" > /dev/null; then
+  echo "❌ Error: Linux binaries for release ${TAG} not found."
+  exit 1
+fi
+
 # Download and calculate checksums
 echo "Downloading binaries and calculating checksums..."
 wget -q "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-aarch64-apple-darwin.tar.gz"
 wget -q "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-x86_64-apple-darwin.tar.gz"
+wget -q "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-aarch64-unknown-linux-gnu.tar.gz"
+wget -q "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-x86_64-unknown-linux-gnu.tar.gz"
 
-ARM64_SHA=$(shasum -a 256 pop-aarch64-apple-darwin.tar.gz | awk '{print $1}')
-X86_64_SHA=$(shasum -a 256 pop-x86_64-apple-darwin.tar.gz | awk '{print $1}')
+MACOS_ARM64_SHA=$(shasum -a 256 pop-aarch64-apple-darwin.tar.gz | awk '{print $1}')
+MACOS_X86_64_SHA=$(shasum -a 256 pop-x86_64-apple-darwin.tar.gz | awk '{print $1}')
+LINUX_ARM64_SHA=$(shasum -a 256 pop-aarch64-unknown-linux-gnu.tar.gz | awk '{print $1}')
+LINUX_X86_64_SHA=$(shasum -a 256 pop-x86_64-unknown-linux-gnu.tar.gz | awk '{print $1}')
 
-echo "✅ ARM64 SHA256: $ARM64_SHA"
-echo "✅ x86_64 SHA256: $X86_64_SHA"
+echo "✅ macOS ARM64 SHA256: $MACOS_ARM64_SHA"
+echo "✅ macOS x86_64 SHA256: $MACOS_X86_64_SHA"
+echo "✅ Linux ARM64 SHA256: $LINUX_ARM64_SHA"
+echo "✅ Linux x86_64 SHA256: $LINUX_X86_64_SHA"
 
 # Clean up
 rm pop-*.tar.gz
@@ -75,12 +87,24 @@ class Pop < Formula
   version "${VERSION}"
   license "GPL-3.0"
 
-  if Hardware::CPU.arm?
-    url "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-aarch64-apple-darwin.tar.gz"
-    sha256 "${ARM64_SHA}"
-  else
-    url "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-x86_64-apple-darwin.tar.gz"
-    sha256 "${X86_64_SHA}"
+  on_macos do
+    if Hardware::CPU.arm?
+      url "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-aarch64-apple-darwin.tar.gz"
+      sha256 "${MACOS_ARM64_SHA}"
+    else
+      url "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-x86_64-apple-darwin.tar.gz"
+      sha256 "${MACOS_X86_64_SHA}"
+    end
+  end
+
+  on_linux do
+    if Hardware::CPU.arm?
+      url "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-aarch64-unknown-linux-gnu.tar.gz"
+      sha256 "${LINUX_ARM64_SHA}"
+    else
+      url "https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${TAG}/pop-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "${LINUX_X86_64_SHA}"
+    end
   end
 
   def install

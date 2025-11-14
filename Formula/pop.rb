@@ -1,26 +1,26 @@
 class Pop < Formula
   desc "Swiss-army knife for Polkadot development"
   homepage "https://github.com/r0gue-io/pop-cli"
-  version "0.11.0"
+  version "0.12.0"
   license "GPL-3.0"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/r0gue-io/pop-cli/releases/download/v0.11.0/pop-aarch64-apple-darwin.tar.gz"
-      sha256 "eb793770fa5b07fb1f158d547d997ce573fb66d7ced309f29f84b6157a584948"
+      url "https://github.com/r0gue-io/pop-cli/releases/download/v0.12.0/pop-aarch64-apple-darwin.tar.gz"
+      sha256 "358a7fd2209f68a9e878d86b294abb656f03b71dcda665c7ee88e1021b9e0ead"
     else
-      url "https://github.com/r0gue-io/pop-cli/releases/download/v0.11.0/pop-x86_64-apple-darwin.tar.gz"
-      sha256 "08da5394b53b6bc91163bc05274c2025aa5178dba6941bf625b9d26f65cb74b4"
+      url "https://github.com/r0gue-io/pop-cli/releases/download/v0.12.0/pop-x86_64-apple-darwin.tar.gz"
+      sha256 "62eb0d80831b9df99aeddef052ac571cdab5b84195cb8dcdbc8bc044497a373b"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/r0gue-io/pop-cli/releases/download/v0.11.0/pop-aarch64-unknown-linux-gnu.tar.gz"
-      sha256 "52b981e540cd49893237437ecaacb0f5cc6ed554266ee9dc258cae34d37781ff"
+      url "https://github.com/r0gue-io/pop-cli/releases/download/v0.12.0/pop-aarch64-unknown-linux-gnu.tar.gz"
+      sha256 "b86d9835f7faaa6e716b40c57ff507a9fdab5a27882a5786337e610cabeb36ef"
     else
-      url "https://github.com/r0gue-io/pop-cli/releases/download/v0.11.0/pop-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "c3f8b5de751719c10c253134cc5fc797d217fbedb40b24bacf242afb415eb7f2"
+      url "https://github.com/r0gue-io/pop-cli/releases/download/v0.12.0/pop-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "434cd246ed99356838a3fe464a5d7d4a7ee9c073597f20b07ecfc3804d7a5510"
     end
   end
 
